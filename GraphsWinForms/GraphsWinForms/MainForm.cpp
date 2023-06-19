@@ -78,9 +78,9 @@ System::Void GraphsWinForms::MainForm::removeGraph()
 
 System::Void GraphsWinForms::MainForm::add_main_graph_btn_Click(System::Object^ sender, System::EventArgs^ e)
 {
-    a = -3;
-    b = 8;
-    h = 0.1;
+    a = 0;
+    b = 2;
+    h = .1;
     x = a; 
     auto series = AddSeries(this->lineColor, L"main");
     while (x <= b)
@@ -95,6 +95,25 @@ System::Void GraphsWinForms::MainForm::add_main_graph_btn_Click(System::Object^ 
 System::Void GraphsWinForms::MainForm::remove_graph_btn_Click(System::Object^ sender, System::EventArgs^ e)
 {
     removeGraph();
+}
+
+System::Void GraphsWinForms::MainForm::axis_size_ValueChanged(System::Object^ sender, System::EventArgs^ e)
+{
+    if (this->xMinField->Value >= this->xMaxField->Value)
+    {
+        MessageBox::Show("x max must be more than x min!", "Warning!");
+        this->xMinField->Value = (int)this->xMaxField->Value-1;
+    }
+    if (this->yMinField->Value >= this->yMaxField->Value)
+    {
+        MessageBox::Show("y max must be more than y min!", "Warning!");
+        this->yMinField->Value = (int)this->xMaxField->Value-1;
+    }
+    this->chart->ChartAreas[0]->Axes[0]->Minimum = (double)this->xMinField->Value;
+    this->chart->ChartAreas[0]->Axes[0]->Maximum = (double)this->xMaxField->Value;
+    this->chart->ChartAreas[0]->Axes[1]->Minimum = (double)this->yMinField->Value;
+    this->chart->ChartAreas[0]->Axes[1]->Maximum = (double)this->yMaxField->Value;
+    this->chart->Refresh();
 }
 
 
