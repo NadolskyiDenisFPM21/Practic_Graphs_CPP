@@ -1,5 +1,8 @@
 #include "MainForm.h"
 #include "functions.h"
+#include <fstream>
+#include <msclr\marshal_cppstd.h>
+
 
 System::Windows::Forms::DataVisualization::Charting::Series^ AddSeries(System::Drawing::Color color, System::String^ name) {
     System::Windows::Forms::DataVisualization::Charting::Series^ series = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
@@ -14,42 +17,84 @@ System::Windows::Forms::DataVisualization::Charting::Series^ AddSeries(System::D
     return series;
 }
 
-System::Void GraphsWinForms::MainForm::exitToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
+
+System::Void GraphsWinForms::MainForm::add_graph_btn_Click(System::Object^ sender, System::EventArgs^ e)
 {
-    if (MessageBox::Show("Do You want exit?", "Warning!", MessageBoxButtons::YesNo) == Windows::Forms::DialogResult::Yes) {
-        Application::Exit();
+    if (this->openFileDialog->ShowDialog() == Windows::Forms::DialogResult::Cancel)
+        return;
+    std::string fileName = msclr::interop::marshal_as<std::string>(this->openFileDialog->FileName);
+    std::ifstream fin(fileName);
+    if (!fin.is_open())
+    {
+        MessageBox::Show("Error!", "Warning!");
+        return;
     }
+    char graphsName[255];
+    fin.getline(graphsName, sizeof(graphsName));
+    auto series = AddSeries(this->lineColor, gcnew System::String(graphsName));
+    std::string value;
+    while (!fin.eof()) {
+        fin >> value;
+        x = std::stod(value);
+        fin >> value;
+        y = std::stod(value);
+        series->Points->AddXY(x, y);
+    }
+    addGraph(series);
+    fin.close();
 }
 
-System::Void GraphsWinForms::MainForm::generateGraphsToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
+System::Void GraphsWinForms::MainForm::colorLinePanel_Click(System::Object^ sender, System::EventArgs^ e)
+{
+    if (this->colorLineDialog->ShowDialog() == Windows::Forms::DialogResult::Cancel)
+        return;
+    this->lineColor = this->colorLineDialog->Color;
+    this->colorLinePanel->BackColor = this->lineColor;
+}
+
+System::Void GraphsWinForms::MainForm::addGraph(System::Windows::Forms::DataVisualization::Charting::Series^ series)
+{
+    this->chart->Series->Add(series);
+    this->GraphsList->Items->Add(series->Name);
+    this->chart->Refresh();
+}
+
+System::Void GraphsWinForms::MainForm::removeGraph()
+{
+    if (this->GraphsList->Items->Count == 0)
+    {
+        MessageBox::Show("No drawn charts!", "Warning!");
+        return;
+    }
+    if (this->GraphsList->SelectedItem == nullptr)
+    {
+        MessageBox::Show("Please, selected graph!", "Warning!"); 
+        return;
+    }
+    this->chart->Series->Remove(this->chart->Series->FindByName(this->GraphsList->SelectedItem->ToString()));
+    this->GraphsList->Items->Remove(this->GraphsList->SelectedItem);
+    this->chart->Refresh();
+}
+
+System::Void GraphsWinForms::MainForm::add_main_graph_btn_Click(System::Object^ sender, System::EventArgs^ e)
 {
     a = -3;
     b = 8;
     h = 0.1;
-    x = a;
-
-    auto series = AddSeries(System::Drawing::Color::Red, L"main");
-    this->chart->Series->Add(series);
+    x = a; 
+    auto series = AddSeries(this->lineColor, L"main");
     while (x <= b)
     {
         y = f(x);
-        this->chart->Series[0]->Points->AddXY(x, y);
+        series->Points->AddXY(x, y);
         x += h;
     }
+    addGraph(series);
 }
 
-System::Void GraphsWinForms::MainForm::clearGraphToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
+System::Void GraphsWinForms::MainForm::remove_graph_btn_Click(System::Object^ sender, System::EventArgs^ e)
 {
-
-}
-
-System::Void GraphsWinForms::MainForm::add_graph_btn_Click(System::Object^ sender, System::EventArgs^ e)
-{
-    if (this->fileNameBox->Text == "")
-    {
-        MessageBox::Show("Enter a file name in the field!", "Warning!");
-        return;
-    }
+    removeGraph();
 }
 
 

@@ -1,0 +1,4 @@
+C:\Users\Denis\source\repos\Practic_Graphs_CPP\GraphsWinForms\GraphsWinForms\x64\Debug\GraphsWinForms.vcxproj.AssemblyReference.cache
+C:\Users\Denis\source\repos\Practic_Graphs_CPP\GraphsWinForms\GraphsWinForms\x64\Debug\GraphsWinForms.vcxproj.SuggestedBindingRedirects.cache
+C:\Users\Denis\source\repos\Practic_Graphs_CPP\GraphsWinForms\GraphsWinForms\x64\Debug\GraphsWinForms.MainForm.resources
+C:\Users\Denis\source\repos\Practic_Graphs_CPP\GraphsWinForms\GraphsWinForms\x64\Debug\GraphsWinForms.vcxproj.GenerateResource.cache

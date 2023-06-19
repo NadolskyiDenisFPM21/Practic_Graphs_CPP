@@ -1,1 +1,6 @@
-﻿
+﻿  MainForm.cpp
+  main.cpp
+C:\Users\Denis\source\repos\Practic_Graphs_CPP\GraphsWinForms\GraphsWinForms\main.cpp(7,34): warning C4829: Возможно, неправильные параметры функции main. Рекомендуемый вариант - "int main(Platform::Array<Platform::String^>^ argv)"
+  Создание кода...
+  functions.obj : обнаружен модуль MSIL; для MSIL последовательная компоновка отключена; выполняется полная компоновка
+  GraphsWinForms.vcxproj -> C:\Users\Denis\source\repos\Practic_Graphs_CPP\GraphsWinForms\x64\Debug\GraphsWinForms.exe
